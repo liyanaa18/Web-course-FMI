@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="bg">
+    <head>
+        <meta charset="UTF-8" />
+        <title>PostCSS</title>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="javascript/script.js"></script>
+    </head>
+
+    <body>
+        <div class="header-class"></div>
+
+        <div class="header-image">
+            <img src="img/3.png" alt="Image not found!" />
+        </div>
+
+        <div class="header-page">
+            <nav>
+                <div class="content">
+                    <h2>Съдържание</h2>
+                    <ol>
+                        <li><a href="#introduction">Въведение</a></li>
+                        <li><a href="#history">История</a></li>
+                        <li><a href="#createPostCSS">Създаване на PostCSS файл</a></li>
+                        <li><a href="#plugins">Плъгини</a></li>
+                        <li><a href="#functionality">Функционалности</a></li>
+                        <li><a href="#setPostCSS">Как да настроим PostCSS</a></li>
+                        <li><a href="#PostCSSvsSass">PostCSS vs Sass</a></li>
+                        <li><a href="#whyPostCSS">Защо да използваме PostCSS?</a></li>
+                        <li><a href="#writePlugin">Как да напишем PostCSS Plugin?</a></li>
+                        <li><a href="#installPlugin">Инсталиране на първия ви PostCSS плъгин</a></li>
+                        <li><a href="#conclution">Заключение</a></li>
+                        <li><a href="#resources">Използвани източници</a></li>
+                        <li><a href="#figures">Списък с фигури</a></li>
+                    </ol>
+                </div>
+            </nav>
+        </div>
+
+        <div class="main-page">
+            <main>
+                <section id="introduction">
+                    <header><h2>Въведение<a href="#link1"><sup>[1]</sup></a></h2></header>
+                    <p>
+                        PostCSS е разработен от Андрей Ситник, създателят на Autoprefixer. Това е инструмент Node.js, разработен като инструмент за 
+                        трансформиране на целия ви CSS с помощта на JavaScript, 
+                        като по този начин се постигат много по-бързи времена за изграждане в сравнение с други процесори.
+                    </p>
+                    <p>
+                        PostCSS не е препроцесор (въпреки че може да се държи като такъв). 
+                        Сам по себе си PostCSS не прави нищо. Това е парсер, който токенизира CSS кода, за да създаде абстрактно синтактично дърво. 
+                        Плъгин може да обработи това дърво и съответно да актуализира свойствата. 
+                        След като всички плъгини завършат работата си, PostCSS преформатира всичко обратно в низ и извежда в CSS файл. 
+                    </p>
+                    <p>
+                        Налични са около 350 плъгина и повечето изпълняват една единствена задача, като вграждане на @import декларации, опростяване на функциите calc(), 
+                        обработка на активи на изображения, линтинг на синтаксис, минимизиране и др.
+                    </p>
+                    <img src="img/1.avif" alt="Image not found!" class="intro-image" />
+                    
+                    <div>Фигура 1<a href="#link-fig"><sup>[1]</sup></a></div>
+                    <p>Използването на PostCSS наскоро започна да се увеличава експоненциално, като днес се използва от някои от най-големите 
+                        бизнеси в технологичната индустрия,
+                        като Twitter, JetBrains и Wikipedia. Широкото му приемане и успех до голяма степен се дължат на неговата модулност.
+                    </p>
+                </section>
+
+                <section id="history">
+                    <header><h2>История<a href="#link2"><sup>[2]</sup></a></h2></header>
+                    <p>
+                        По време на проекта Rework идеята за модулна обработка на CSS е предложена от TJ Holowaychuk на 1 септември 2012 г. 
+                    </p>
+                    <p>
+                        28 февруари 2013 г. TJ го изразява публично.
+                    </p>
+                    <p>
+                        14 март 2013 г., предната работа на Андрей Ситник за Evil Martians довежда до Autoprefixer, 
+                        базиран на преработване плъгин. Първоначално името на плъгина е rework-vendors.
+                    </p>
+                    <p>
+                        Тъй като Autoprefixer нараства, Rework вече не може да посреща нуждите си. 7 септември 2013 г.  
+                        Андрей Ситник започва да разработва PostCSS въз основа на идеите на Rework. 
+                    </p>
+                    <p>
+                        След 3 месеца е пуснат първият PostCSS плъгин, grunt-pixrem. 
+                    </p>
+                    <p>
+                        22 декември 2013 г. Autoprefixer версия 1.0 мигрира към PostCSS. За PostCSS основният фокус на стила е алхимията. 
+                        Логото на проекта представлява философския камък. Основните и второстепенните версии на PostCSS получават имената си 
+                        след демоните Ars Goetia. Например, версия 1.0.0 се нарича Marquis Decarabia. 
+                    </p>
+                    <p>
+                        Терминът постпроцесор предизвика известно объркване. Екипът на PostCSS използва термина, за да покаже, че PostCSS не е шаблонен език 
+                        (препроцесор), а CSS инструмент. Някои разработчици обаче смятат, че терминът постпроцесор би подхождал по-добре на инструментите на 
+                        браузъра (например -без префикс). 
+                        Ситуацията стана още по-сложна след пускането на PreCSS. Сега, вместо постпроцесор, екипът на PostCSS използва термина процесор.
+                    </p>
+                </section>
+
+                <section id="createPostCSS">
+                    <header><h2>Създаване на PostCSS файл<a href="#link3"><sup>[3]</sup></a></h2></header>
+                    <p>
+                        Командата postcss ще стане дълга и тромава, докато използваме допълнителни плъгини и опции. Може да създадем 
+                        конфигурационен файл на JavaScript, който дефинира всички опции и може логично да определи дали се изпълнява в 
+                        среда за разработка или производство. 
+                    </p>
+                    <p>
+                        Създаваме конфигурационен файл с име postcss.config.cjs в корена на папката на проекта. Също така трябва да имаме 
+                        предвид следното: 
+                            <ul>
+                                <li>Може да поставим файла в друга папка, но ще трябва да посочим --config &lt;dir>.</li>
+                                <li>Когато изпълняваме postcss може да използваме postcss.config.js като име на файл, но PostCSS може да се провали 
+                                    в Node.js проекти, които имат "тип": "модул", зададен в package.json </li>
+                                <li>Добавяме следния код към postcss.config.cjs:</li>
+                            </ul>
+                    </p>
+                    <div class="copy-code">
+                        <code>
+                            <pre id="toCopy1">
+                                // PostCSS configruation
+                                    module.exports = (cfg) => {
+
+                                    const devMode = (cfg.env === 'development');
+
+                                    return {
+
+                                        map: devMode ? 'inline' : null,
+                                        plugins: [
+                                        require('postcss-import')(),
+                                        require('autoprefixer')(),
+                                        devMode ? null : require('cssnano')()
+                                        ]
+
+                                    };
+                                    };
+                            </pre>
+                            <button onclick="func(1)">Copy code</button> 
+                        </code>
+                        <div class="clear-fix"></div>
+                    </div>
+                    <p>PostCSS предава cfg обект, който съдържа опциите на командния ред. Например:</p>
+                    <div class="copy-code">
+                        <code>
+                            <pre id="toCopy2">
+                                {
+                                    cwd: '/home/yourname/cssproject',
+                                    env: undefined,
+                                    options: {
+                                    map: { inline: true },
+                                    parser: undefined,
+                                    syntax: undefined,
+                                    stringifier: undefined
+                                    },
+                                    file: {
+                                    dirname: '/home/yourname/cssproject/src',
+                                    basename: 'main.css',
+                                    extname: '.css'
+                                    }
+                                }                          
+                            </pre>
+                            <button onclick="func(2)">Copy code</button> 
+                        </code>
+                        <div class="clear-fix"></div>
+                    </div>
+                    
+                    <p>Модулът трябва да върне обект с незадължителни свойства:</p>
+                    <ul>
+                        <li>map: настройката на изходната карта </li>
+                        <li>parser: дали да се използва анализатор на синтаксис, различен от CSS (като плъгина scss) </li>
+                        <li>plugins: масив от плъгини и конфигурации за обработка в посочения ред</li>
+                    </ul>
+                    <p>
+                        Кодът по-горе открива дали командата postcss има опция --env. Това е пряк път за настройка на променливата на 
+                        средата NODE_ENV. За да компилираме CSS в режим на разработка, стартираме postcss с --env development и, по избор, 
+                        задаваме --watch --verbose. Това създава вградена карта на източника и не минимизира изхода:
+                    </p>
+
+                    <div class="copy-code-mini">
+                        <code>
+                            <pre id="toCopy3">
+                    postcss ./src/main.css --output ./styles.css --env development --watch --verbose
+                            </pre>
+                        </code>
+                    </div>
+                    <p>   
+                        За да работим в производствен режим и да компилираме минимизиран CSS без карта на източника, 
+                        можем да използваме следното: 
+                    </p>
+                    <div class="copy-code-mini">
+                        <code>
+                            <pre id="toCopy4">
+                                postcss ./src/main.css --exit ./styles.css 
+                            </pre>
+                        </code>
+                    </div>
+                    <p>   
+                        В идеалния случай може да ги стартираме като терминални или npm скриптове, 
+                        за да намалим допълнително усилието при въвеждане.
+                    </p>
+                </section>
+
+                <section id="plugins">
+                    <header><h2>Плъгини<a href="#link4"><sup>[4]</sup></a></h2></header>
+                    <p>
+                        PostCSS плъгините изпълняват различни задачи за обработка на CSS, вариращи от анализ и сортиране на свойства до 
+                        минимизиране. Пълният списък с плъгини може да бъде намерен на postcss.parts, като някои примери са изброени по-долу. 
+
+                        <ul>
+                            <li>
+                                Autoprefixer за добавяне и изчистване на префикси на браузъра. 
+                            </li>
+                            <li>
+                                CSS модули за изолиране на CSS селектори и организиране на кода. Доставя се като част от Webpack.
+                            </li>
+                            <li>
+                                stylelint за анализиране на CSS кода за грешки и проверка на последователността на стила.
+                            </li>
+                            <li>
+                                stylefmt коригира CSS кода според настройките на stylelint. 
+                            </li>
+                            <li>
+                                PreCSS за изпълнение на някои Sass/Less функции за предварителна обработка.
+                            </li>
+                            <li>
+                                postcss-preset-env за емулиране на функции от незавършени чернови на CSS спецификация.
+                            </li>
+                            <li>
+                                cssnano, за да направи CSS по-малък по размер, като се отърве от интервалите и пренапише кода. 
+                            </li>
+                            <li>
+                                RTLCSS за промяна на CSS кода, така че дизайнът да е подходящ за писане отдясно наляво 
+                                (такова се прилага на арабски и иврит).
+                            </li>
+                            <li>
+                                postcss-assets, postcss-inline-svg и postcss-sprites за работа с графики.
+                            </li>
+                        </ul>
+                    </p>
+
+                    <h3>Други полезни плъгини са:</h3>
+                    <p>В репото PostCSS GitHub има пълен списък на наличните плъгини</p>
+                    <span><a href="https://github.com/postcss/postcss/blob/master/docs/plugins.md" target="_blank" style="font-size: 20px;">Repo GitHub PostCSS</a>
+                    </span>
+                    <p>Някои от тези включват:
+                        <ul>
+                            <li>
+                                LostGrid <a href="https://github.com/peterramsing/lost" target="_blank">(https://github.com/peterramsing/lost)</a>
+                                е PostCSS мрежова система postcss-sassy <a href="https://github.com/andyjansson/postcss-sassy-mixins" target="_blank">(https://github.com/andyjansson/postcss-sassy-mixins)</a>
+                                предоставя миксини, подобни на Sass 
+                            </li>
+                            <li>
+                                postcss-nested <a href="https://github.com/postcss/postcss-nested" target="_blank">(https://github.com/postcss/postcss-nested)</a>
+                                предоставя възможност за използване на вложени 
+                                правила на Sass 
+                            </li>
+                            <li>
+                                postcss-nested-ancestors <a href="https://github.com/toomuchdesign/postcss-nested-ancestors" target="_blank">(https://github.com/toomuchdesign/postcss-nested-ancestors)</a>,
+                                препратка към всеки селектор на предшественик във вложен CSS 
+                            </li>
+                            <li>
+                                postcss-simple-vars <a href="https://github.com/postcss/postcss-simple-vars" target="_blank">(https://github.com/postcss/postcss-simple-vars)</a>, 
+                                използвайте подобни на Sass променливи
+                            </li>
+                            <li>
+                                PreCSS <a href="https://github.com/jonathantneal/precss" target="_blank">(https://github.com/jonathantneal/precss)</a>
+                                ви предоставя много функции на Sass и това е най-близо до пълната замяна на Sass
+                            </li>
+                        </ul>
+                    </p>
+                </section>
+
+                <section id="functionality">
+                    <header><h2>Функционалности<a href="#link5"><sup>[5]</sup></a></h2></header>
+                    <p>PostCSS е рамка за разработване на CSS инструменти. 
+                        Може да се използва за разработване на шаблонен език като Sass и LESS. 
+                        Ядрото на PostCSS се състои от:</p>
+                    <ul>
+                        <li>
+                            CSS анализатор/CSS parser, който генерира абстрактно синтактично дърво 
+                        </li>
+                        <li>
+                            Набор от класове/Set of classes, който съставлява дървото 
+                        </li>
+                        <li>
+                            CSS генератор/CSS generator, който генерира CSS ред за дървото на обектите
+                        </li>
+                        <li>
+                            Генератор на кодова карта/Code map generator за направените CSS промени 
+                        </li>
+                    </ul>
+
+                    <p>
+                        Функциите са достъпни чрез плъгини. Плъгините са малки програми, работещи с дървото на обектите. 
+                        След като ядрото трансформира CSS низ в дърво на обекти, плъгините анализират и променят дървото. 
+                        След това PostCSS генерира нов CSS низ за дървото, променено от плъгина. 
+                    </p>
+                    <p>
+                        PostCSS и неговите плъгини са написани на JavaScript и се разпространяват чрез npm, който предлага 
+                        API за JavaScript операции на ниско ниво.
+                    </p>
+                    <p>
+                        Има официални инструменти, които правят възможно използването на PostCSS със системи за изграждане като Webpack, Gulp и Grunt. 
+                        Наличен е и конзолен интерфейс. 
+                        Browserify или Webpack могат да се използват за отваряне на PostCSS в браузър. 
+                    </p>
+                    <p>
+                        Можем да конфигурираме нашия списък с браузъри във файла package.json с помощта на ключ „browserslist“:
+                    </p>
+                    <div class="copy-code-mini">
+                        <code>
+                            <pre id="toCopy5">
+                                "browserslist": [ 
+                                    "defaults"  
+                                ]
+                            </pre>
+                        </code>
+                    </div>
+                    <p>
+                        Заявката по подразбиране по-горе е кратка версия на: 
+                    </p>
+                    <ul>
+                        <li>> 0,5% браузъри, които имат поне 0,5% глобално използване. </li>
+                        <li>no dead browsers, които са получили официална поддръжка или актуализации през последните 24 месеца.</li>
+                        <li>последните 2 версии за всеки браузър, Firefox ESR най-новата версия за разширена поддръжка на Firefox</li>
+                    </ul>
+
+                    <p>Или можем да използваме файл .browserslistrc в главната директория и вътре да въвеждаме нашите конфигурации.</p>
+                    
+                    <p>PostCSS позволява промяна на анализатора и генератора. В този случай PostCSS може да се използва за работа с източниците Less и SCSS. 
+                        Въпреки това PostCSS сам по себе си не може да компилира Sass или Less в CSS. Това, което прави, е да променя оригиналните файлове - 
+                        например чрез сортиране на свойствата на CSS или проверка на кода за грешки. 
+                        PostCSS поддържа SugarSS.</p>  
+                </section>
+
+                <section id="setPostCSS">
+                    <header><h2>Как да настроим PostCSS<a href="#link6"><sup>[6]</sup></a></h2></header>
+                    <p>За да започнем да използваме PostCSS, първо трябва да го инсталираме и неговия интерфейс на командния ред (CLI) глобално, 
+                        като използваме тази команда:</p>
+
+                    <div class="copy-code-mini">
+                        <code>
+                            <pre id="toCopy6">npm i -g postcss-cli</pre> 
+                        </code>
+                    </div>
+                    <ul>
+                        <li>-g, за да го изтеглите глобално</li>
+                    </ul>
+                    <p>След това инсталирайте PostCSS локално, като използвате следната команда:</p>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy37">npm i -D postcss</pre></code>
+                    </div>
+
+                    <ul>
+                        <li>-D е съкращение от --save-dev за запазване на инсталираните пакети като dev dependencies</li>
+                    </ul>
+
+                    <p>За да започнем да използваме PostCSS, трябва да имаме изтеглен поне един плъгин. </p>
+
+                    <div class="cli-set">
+                        <header><h3>Настройване на PostCSS с помощта на PostCSS CLI<a href="#link6.1"><sup>[6.1]</sup></a></h3></header>
+                        <p>Общият синтаксис за командата, която трябва да се изпълни в терминала, е:</p>
+
+                        <div class="copy-code">
+                            <code><pre id="toCopy35">postcss [input.css] [OPTIONS] [-o|--output output.css] [--watch|-w] </pre>
+                                <button onclick="func(35)">Copy code</button> </code>
+                                <div class="clear-fix"></div>
+                        </div>
+
+                        <div class="copy-code">
+                            <code><pre id="toCopy36">postcss &lt;input.css> [OPTIONS] --dir &lt;output-directory> [--watch|-w] </pre>
+                                <button onclick="func(36)">Copy code</button> </code>
+                                <div class="clear-fix"></div>
+                        </div>
+
+                        <p>Можем да изпълним следната команда директно в терминала:</p>
+
+                        <div class="copy-code-mini">
+                            <code><pre id="toCopy7">postcss src/style.css --use postcss-import --dir public --watch </pre>
+                            </code>
+                        </div>
+
+                        <p>Опцията --use изброява добавките, които използваме.  
+                            Опцията --watch следи файловете за промени и ги прекомпилира.
+                            </p>
+                    </div>
+
+                    <div class="npm-set">
+                        <header><h3>Настройване на PostCSS чрез NPM скриптове във файла package.json<a href="#link6.2"><sup>[6.2]</sup></a></h3></header>
+                        <p>Във файла package.json в „скриптовете“ трябва да напишем следното: </p>
+                        <div class="copy-code-mini">
+                            <code><pre id="toCopy8">"postcss:watch": "postcss src/style.css --use postcss-import --dir public --watch" </pre></code>
+                        </div>
+
+                        <p>
+                            Горната команда ще създаде нова директория, наречена „public“, която съдържа нашия окончателен Vanilla CSS файл, 
+                            който има същото име като изходния файл (style.css). 
+                        </p>
+                        <p>Ако искаме изходният файл да има различно име от името на изходния файл, трябва да заменим </p>
+                        <div class="copy-code-mini">
+                            <code><pre id="toCopy9">--dir public с -o public/&lt;file-name>. </pre>
+                            </code>
+                        </div>
+                        <p>Като например: -o public/main.css.</p>
+
+                        <p>
+                            Можем да конфигурираме нашата команда да се изпълнява в PostCSS CLI с различни опции, за да получим желания резултат. 
+                        </p>
+                        <p>
+                            Сега, за да изпълним горната команда, въвеждаме npm run &lt;command name> в нашия терминал. 
+                            (нашето &lt;име на команда> е postcss:watch, можете да изберете произволно име). 
+                        </p>
+
+                        <p>
+                            Тъй като нашият проект става по-голям, е по-вероятно да добавим още плъгини. 
+                            За всеки използван плъгин трябва да запишем името му след ключовата дума 
+                            --use в командата по-горе, което го прави невероятно дълго и не е добра практика.
+                        </p>
+
+                        <p>
+                            Алтернативното решение е да създадем файл postcss.config.js.
+                        </p>
+                    </div>
+                    <div class="file-class">
+                        <header><h3>Настройване на PostCSS, като настроите конфигурационен файл на PostCSS<a href="#link6.3"><sup>[6.3]</sup></a></h3></header>
+                            <p>В основната директория на проект създайте файл и го наименувайте postcss.config.js. 
+
+                                Кодът вътре в него ще изглежда така: 
+                            </p>
+                            <div class="copy-code">
+                                <code><pre id="toCopy10">
+                                    module.exports = {
+                                        plugins: [
+                                            require('postcss-import'),
+                                            require('postcss-mixins'),
+                                            require("stylelint"),
+                                            require('postcss-preset-env')({ stage: 1 }),
+                                            require('cssnano'),
+                                        ],
+                                    }
+                                </pre>
+                                <button onclick="func(10)">Copy code</button> </code>
+                                <div class="clear-fix"></div>
+                            </div>
+                            <p>Вътре в масива с плъгини добавяме нашите плъгини. 
+                                Забележка: Много е важно да добавите приставката postcss-import в горната част на нашия списък, 
+                                тъй като се изисква от документацията. 
+                                Командата, която изпълнява PostCSS в нашия файл package.json, трябва да бъде променена на: 
+                            </p>
+
+                            <div class="copy-code-mini">
+                                <code><pre id="toCopy11">"postcss:watch": "postcss src/style.css --dir public --watch" 
+                                </pre></code>
+                            </div>
+                            <p>Както можете да видите, единствената необходима промяна е да премахнете опцията --use, 
+                                тъй като списъкът с нашите добавки, споменат сега, е отделен файл.</p>
+                    </div>
+
+                    <div class="task-class">
+                        <header><h3>Настройване на PostCSS с помощта на Task Runners (или Module Bundlers)<a href="#link6.4"><sup>[6.4]</sup></a></h3></header>
+                        <p>PostCSS може да бъде настроен да работи с различни програми за изпълнение на задачи като Gulp, 
+                            Grunt и пакети за модули като Rollup и Webpack.</p>
+                        
+                            <p>Първо, трябва да инсталираме grunt локално в зависимостите „dev“: </p>
+                            
+                            <div class="copy-code-mini">
+                                <code><pre id="toCopy12">npm i -D grunt</pre></code> 
+                            </div>
+                            <p>И след това инсталирайте grunt-cli глобално: </p>
+                            
+                            <div class="copy-code-mini">
+                                <code><pre id="toCopy13">npm install -g grunt-cli </pre></code>
+                            </div>
+                            
+                            <p>Сега трябва да създадем файл в корена на нашия проект и да го наименуваме Gruntfile.js. 
+                            След това трябва да инсталираме конкретен плъгин @lodder/grunt-postcss, който да ни позволи да изпълняваме 
+                            PostCSS с помощта на Grunt чрез следната команда: </p>
+                            
+                            <div class="copy-code-mini">
+                                <code><pre id="toCopy14">npm i -D @lodder/grunt-postcss </pre></code>
+                            </div>
+
+                            <p>Във функцията initCnfig настройваме нашата PostCSS конфигурация.</p>
+                            
+                            <div class="copy-code">
+                                <code><pre id="toCopy15">
+                                    module.exports = function(grunt) {
+                                
+                                    grunt.initConfig({
+                                        postcss: {
+                                            options: {
+                                                processors: [
+                                                    require('postcss-import')(),
+                                                    require('postcss-mixins'),
+                                                    require("stylelint"),
+                                                    require('postcss-preset-env')({ stage: 1 }),
+                                                    require('cssnano')(),
+                                                ]
+                                            },
+                                            dist: {
+                                                src: 'src/style.css',
+                                                dest: 'public/style.css'
+                                            }
+                                        }
+                                    })
+                                
+                                    grunt.loadNpmTasks('@lodder/grunt-postcss');
+                                }
+                            </pre>
+                            <button onclick="func(15)">Copy code</button> </code>
+                            <div class="clear-fix"></div>
+                        </div>
+
+                        <ul> Тук ще се придържаме към основния минимум за стартиране на PostCSS, който е: 
+                            <li>Извикване на нашите плъгини в процесорния масив.</li> 
+                            <li>Настройване на изходния файл и целевия файл в обекта dist. </li>
+                        </ul>
+                        <p>За да завършим нашата конфигурация, трябва да заредим нашия плъгин с помощта на метода grunt.loadNpmTasks. 
+                            Накрая, за да изпълним нашата Grunt задача, въвеждаме: </p>
+                        <div class="copy-code-mini">
+                            <code><pre id="toCopy16">grunt postcss</pre></code> 
+                        </div>                      
+                    </div>
+                </section>
+
+                <section id="PostCSSvsSass">
+                    <header><h2>PostCSS vs Sass<a href="#link7"><sup>[7]</sup></a></h2></header>
+                    <div>
+                        <img src="img/2.jpg" alt="Image not found!" class="third-image"/>
+                    </div>
+                    
+                    <div class="text-class">
+                        <p>Основното предимство, което PostCSS предоставя пред CSS препроцесорите като Sass или Less, е възможността да 
+                            избираме свой собствен път и да изберем функциите, от които се нуждаем, като същевременно добавяме нови възможности. 
+                            Sass или Less са „фиксирани“, получаваме много функции, които може или не може да използваме, и не позволяват 
+                            разширение.
+                        </p>
+                    </div>
+
+                    <div class="clear-fix"></div>
+                </section>
+
+                <section id="whyPostCSS">
+                    <header><h2>Защо да използваме PostCSS?<a href="#link8"><sup>[8]</sup></a></h2></header>
+                    <p>Може вече да използвате Sass или Less, за да добавите логика към вашия CSS работен процес: променливи, оператори if/else, функции и mixins. 
+                        Има обаче някои ограничения за тези препроцесори. </p>
+
+                    <p>Какво става, ако трябва да добавите едно или две CSS свойства въз основа на наличието на други CSS свойства?</p>
+
+                    <p>Искаме това приятно естествено усещане за еластично/инерционно превъртане, когато имаме елемент с 
+                    overflow: scroll (или overflow-x / overflow-y). Навсякъде, където направим елемент с възможност за превъртане, ще трябва да добавим 
+                    -webkit-overflow-scrolling: touch. </p>
+                    <p>Препроцесорите нямат начин да открият какви свойства има в даден селекторен блок, така че ще ни трябва многословно миксин решение. 
+                        Освен това не използваме препроцесор за всеки проект, така че се нуждаехме от PostCSS решение. </p>
+                    <p>За сравнение, ето как можем да приложим Sass mixin за това поведение на превъртане: </p>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy17">
+                            @mixin overflow-scroll($direction: false) {
+                            $property: if($direction, 'overflow-#{$direction}', 'overflow');
+
+                            #{$property}: overflow;
+                            -webkit-overflow-scrolling: touch;
+                            }
+                        </pre>
+                        <button onclick="func(17)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+
+                    <h3>Mixin, който се използва на Sassmeister.</h3> 
+
+                    <p>Този подход работи, но има някои съществени недостатъци. 
+                    Първо, вие вече не пишете специфичен CSS: пишете по-подробна абстракция. Всеки разработчик, който дойде до тази кодова база, 
+                    трябва да научи друга абстракция. Второ, това не е добре автоматизирано. Ако забравите да използвате mixin, не получавате 
+                    допълнителното свойство.</p>    
+
+                    <p>PostCSS, от друга страна, автоматизира това напълно, без да е необходима писмена абстракция. 
+                    Плъгинът PostCSS може да намери всеки селекторен блок с препълване с превъртане и 
+                    автоматично да вмъкне допълнителното свойство.</p>
+                </section>
+
+                <section id="writePlugin">
+                    <header><h2>Как да напишем PostCSS Plugin?<a href="#link9"><sup>[9]</sup></a></h2></header>
+                    <p>Клонирайте Boilerplate Repo на приставката PostCSS</p>
+                    <ul>
+                        <li>Отидете до вашия терминал и клонирайте Boilerplate repo на приставката PostCSS</li>
+                    </ul>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy18">$ git clone git@github.com:postcss/postcss-plugin-boilerplate.git</pre></code>
+                    </div>
+                    
+                    <ul>
+                        <li>След това стартирайте скрипта на съветника от това репо:</li>
+                    </ul>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy19">$ node ./postcss-plugin-boilerplate/start</pre>
+                        </code>
+                    </div>
+
+                    <p>Този скрипт ще ви зададе няколко въпроса във вашия терминал. Той ще изтегли вашето име и имейл адрес от вашия локален git 
+                    профил (ако сте го настроили) и след това ще ви попита за вашето потребителско име в Github. След това ще изберете името на вашия 
+                    плъгин. Ще започне с postcss- и ще завършите името. След това съветникът ще ви помоли да завършите изречение, описващо какво ще прави 
+                    вашият плъгин. Накрая ще започне разделен със запетая списък с тагове, които да попълните.</p>
+                    
+                    <img src="img/4.jpg" alt="Image not found!" class="text-img"/>
+
+                    <p>След като завършите тази настройка, ще имате шаблонна директория: съветникът я създаде със същото име, което сте избрали 
+                    за вашия плъгин, докато отговаряте на въпросите на скрипта. Нека се насочим към тази директория:</p>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy20">$ cd postcss-test-plugin</pre>
+                        </code>
+                    </div>
+
+                    <p>В него ще намерите някои познати компоненти на проект, базиран на възли: index.js, package.json, директория node_modules. 
+                    <p>Ще поставите вашата логика в index.js: функциите, които манипулират CSS. Ако имате някакви други зависимости на модул 
+                    на възел за вашия плъгин, package.json ще ги управлява и ще ги инсталира в node_modules.</p> 
+                    <p>Нека започнем с разглеждане на шаблонния код, предоставен в index.js:</p>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy21">var postcss = require('postcss');</pre>
+                        </code>
+                    </div>
+                    <p>Първото нещо, което прави, е да вземе необходимата предпоставка: самата PostCSS библиотека. 
+                        Кодът, който следва, разчита на достъп до PostCSS.</p>
+
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy22">
+                            module.exports = postcss.plugin('postcss-test-plugin', function (opts) {
+                            opts = opts || {};
+                            // Work with options here
+                            return function (root, result) {
+                                // Transform CSS AST here
+                            };
+                        });</pre>
+                        <button onclick="func(22)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+
+                    <p>Този блок от код е частта, която всъщност съдържа инструкции за манипулиране на вашия CSS. 
+                        Първото нещо, което ще трябва да направим, е да преминем през всички декларационни блокове в листа със стилове. 
+                        Основният параметър във функцията за връщане има метод за това: .walkRules(). </p>
+
+                    <header><h3>Преминаване през всеки селекторен блок<a href="#link9.1"><sup>[9.1]</sup></a></h3></header>
+                    <p>Ще надстроим шаблона с .walkRules(), за да преминем през всеки декларационен блок и да ни позволи достъп до стиловете в него:</p>
+                    
+                    <div class="copy-code">
+                        <code><pre id="toCopy23">
+                            root.walkRules(function(rule) {
+                        // We'll put more code here in a moment…
+                        });</pre>
+                        <button onclick="func(23)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+                    <p>Сега, когато преминаваме през всеки селекторен блок, трябва да видим дали съдържа свойство за преливане. 
+                    За достъп до тези свойства ще използваме метода .walkDecls(), който е част от правилото, предадено на функцията по-горе.</p>
+                    
+                    <header><h3>Преминаване през всяко свойство<a href="#link9.2"><sup>[9.2]</sup></a></h3></header>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy24">
+                            rule.walkDecls(function(decl) {
+                        // We work with each `decl` object here.
+                        });
+                        </pre>
+                        <button onclick="func(24)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+                    <p>Вътре в този цикъл, decl е обект, представляващ декларация за стил. Той съдържа данни за двойката свойство-стойност, 
+                    както и някои методи за нейното манипулиране. Двете най-важни неща за нашия случай са decl.prop (името на свойството) и decl.value 
+                    (стойността на свойството). </p>
+
+                    <header><h3>Намиране на свойства на препълване<a href="#link9.3"><sup>[9.3]</sup></a></h3></header>
+                    <p>За да открием дали decl е свързано с препълване, можем да поставим оператор if в този цикъл: </p>
+
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy25">if (decl.prop.indexOf('overflow') === 0),</pre>
+                            </code></div> 
+                    <p>но има по-ефективен начин да направите това. 
+                    PostCSS ни позволява да филтрираме специфични свойства в метода .walkDecls(). 
+                    Можете да намерите това в документацията за API на PostCSS. Нямаме нужда от този if оператор, 
+                    ако филтрираме свойството за препълване по следния начин:</p>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy26">
+                            rule.walkDecls('overflow', function(decl) {
+                        // We work with the `decl` object here.
+                        });</pre>
+                        <button onclick="func(26)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+
+                    <p>Това обаче не е съвсем правилно. Ще намери само свойството за преливане. Ако искаме да отчетем и overflow-x и overflow-y 
+                        (а ние го правим), трябва малко да коригираме този филтър. Този проп параметър не приема масив от имена на свойства. 
+                        За да съпоставим няколко свойства, ще трябва да използваме част от RegEx: /^overflow-?/. </p>
+
+                    <p>Ето кратко обяснение за този синтаксис: </p>
+                    <ul>
+                        <li>^ означава, че името на свойството трябва да започва с препълване;</li> 
+                        <li>-? означава „може или не може да има - след думата препълване.</li> 
+                    </ul>
+                    <p>Забележете, че не използваме '' около регулярния израз. Това ни води до:</p>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy27">
+                            rule.walkDecls(/^overflow-?/, function(decl) {
+                        // We work with the `decl` object here.
+                        });</pre>
+                        <button onclick="func(27)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+
+                    <header><h3>Предотвратяване на дублиращи се свойства<a href="#link9.4"><sup>[9.4]</sup></a></h3></header>
+                    <p>Този код ще премине през всички блокове селектори в нашата таблица със стилове, след което ще премине през 
+                    всички свойства, свързани с препълване в тези селектори. Всичко, което остава да направите, е да вмъкнете нашето property. 
+                    Следващият блок от код ще провери дали стойността на свойството, свързано с препълването, е превъртане и ако е така, добавете свойството.</p>
+                    
+                    <div class="copy-code">
+                        <code><pre id="toCopy28">
+                            if (decl.value === 'scroll') {
+                                rule.append({
+                            prop: '-webkit-overflow-scrolling',
+                            value: 'touch'
+                        });
+                        }</pre>
+                        <button onclick="func(28)">Copy code</button> </code>
+                        <div class="clear-fix"></div>
+                    </div>
+
+                    <p>В този случай прибягваме до оператор if. Цикълът, който написахме преди малко, филтрира свойствата, така че тази функция 
+                    работи само върху обекти decl, където свойството започва с overflow-?. </p>
+
+                    <p>Сега, ако decl.value е превъртане, ще добавим двойка свойство-стойност към родителския обект на правило.</p>
+                    <p>Възможно е някой вече да е включил свойството -webkit-overflow-scrolling. Не искаме да го дублираме. PostCSS има функция, 
+                    която ни позволява да проверим дали дадено свойство вече е в блок за избор:</p>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy29">
+                            var hasTouch = rule.some(function(i) {
+                                return i.prop === '-webkit-overflow-scrolling';
+                            });
+                            if (!hasTouch) {
+                            rule.append({
+                                prop: '-webkit-overflow-scrolling',
+                                value: 'touch'
+                            });
+                        }</pre> <button onclick="func(29)">Copy code</button> </code>
+                        <div class="clear-fix"></div> 
+                    </div>
+
+                    <p>Сега имаме по-добра функция: ако разработчик умишлено е поставил -webkit-overflow-scrolling където е 
+                    необходимо, ние няма да го дублираме.</p>
+                </section>
+
+                <section id="installPlugin">
+                    <header><h2>Инсталиране на първия ви PostCSS плъгин<a href="#link10"><sup>[10]</sup></a></h2></header>
+                    <p>Ще ви е необходим поне един плъгин, за да направите нещо практично. Плъгинът за импортиране на PostCSS е добра 
+                    опция, която вгражда всички @import декларации и обединява вашия CSS в един файл. Инсталирайте го глобално така:</p>
+                    
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy38">npm install -g postcss-import</pre></code>
+                    </div>
+                    <div class="clear-fix"></div> 
+
+                    <p>За да тествате този плъгин, отворете или създайте нова папка на проекта, като например cssproject, 
+                    след което създайте подпапка src за вашите изходни файлове. Създайте файл main.css, за да заредите всички части: </p>
+                    
+                    <div class="copy-code">
+                        <code><pre id="toCopy30">
+                            /* src/main.css */ 
+                            @import '_reset'; 
+                            @import '_elements';
+                        </pre> <button onclick="func(30)">Copy code</button> </code>
+                        <div class="clear-fix"></div> 
+                    </div>
+
+                    <p>След това създайте файл _reset.css в същата папка:</p>
+                    <div class="copy-code">
+                        <code><pre id="toCopy31">
+                            /* src/reset.css */
+                            * {
+                            padding: 0;
+                            margin: 0;
+                            }</pre> <button onclick="func(31)">Copy code</button> </code>
+                        <div class="clear-fix"></div> 
+                    </div>
+
+                    <p>Следвайте това с файл _elements.css:</p>
+                    <div class="copy-code">
+                        <code><pre id="toCopy32"> 
+                            /* src/elements.css */
+                            body {
+                            font-family: sans-serif;
+                            }
+
+                            label {
+                            user-select: none;
+                            }</pre> <button onclick="func(32)">Copy code</button> </code>
+                        <div class="clear-fix"></div> 
+                    </div>
+
+                    <p>Стартирайте PostCSS от главната папка на проекта, като подадете входния CSS файл, списък с плъгини към --use и име на --output файл:</p> 
+                    <div class="copy-code-mini">
+                        <code><pre id="toCopy33">postcss ./src/main.css --use postcss-import --output ./styles.css </pre></code>
+                    </div>
+                    <p>Ако нямате никакви грешки, следният код ще бъде изведен в нов файл styles.css в корена на проекта: </p>
+
+                    <div class="copy-code">
+                        <code><pre id="toCopy34">
+                            /* src/main.css */
+                            /* src/reset.css */
+                            * {
+                            padding: 0;
+                            margin: 0;
+                            }
+                            /* src/elements.css */
+                            body {
+                            font-family: sans-serif;
+                            }
+                            label {
+                            user-select: none;
+                            }
+                            /* sourceMappingURL=data:application/json;base64,...
+                        </pre>
+                        <button onclick="func(34)">Copy code</button> </code>
+                    <div class="clear-fix"></div> </div>
+                </section>
+
+                <section id="conclution">
+                    <header><h2>Заключение<a href="#link11"><sup>[11]</sup></a></h2></header>
+                    <p>PostCSS съществува от 2015 г. и е много популярен сред CSS препроцесорите. Можете да го използвате като самостоятелен инструмент или във връзка с други съществуващи препроцесори. 
+                        Кога го използвате и как (самостоятелно или в комбинация) зависи от нуждите на вашия проект.</p>
+                </section>
+
+                <section id="resources">
+                    <header><h2>Използвани източници</h2></header>
+                    <p id="link1">[1] Въведение:
+                    <p><a href="https://www.toptal.com/front-end/postcss-sass-new-play-date" target="_blank">https://www.toptal.com/front-end/postcss-sass-new-play-date</a>,
+                    последно посетен на 2023-05-15</p>
+                    <p><a href="https://www.sitepoint.com/an-introduction-to-postcss/" target="_blank">https://www.sitepoint.com/an-introduction-to-postcss/</a>,
+                        последно посетен на 2023-04-01</p>
+                    </p>
+
+                    <p id="link2">[2] История: 
+                    <p><a href="https://en.wikipedia.org/wiki/PostCSS" target="_blank">https://en.wikipedia.org/wiki/PostCSS</a>, последно посетен на 2023-04-15</p></p>
+
+                    <p id="link3">[3] Създаване на PostCSS файл: <p><a href="https://en.wikipedia.org/wiki/PostCSS" target="_blank">https://en.wikipedia.org/wiki/PostCSS</a>, последно посетен на 2023-04-15</p></p>
+
+                    <p id="link4">[4] Плъгини: 
+                    <p><a href="https://en.wikipedia.org/wiki/PostCSS" target="_blank">https://en.wikipedia.org/wiki/PostCSS</a>, последно посетен на 2023-04-15</p>
+                    <p><a href="https://jacekjeznach.com/what-is-postcss-and-should-i-use-it/" target="_blank">https://jacekjeznach.com/what-is-postcss-and-should-i-use-it/</a>, 
+                    последно посетен на 2023-04-15</p></p>
+
+                    <p id="link5">[5] Функционалности: 
+                    <p><a href="https://en.wikipedia.org/wiki/PostCSS" target="_blank">https://en.wikipedia.org/wiki/PostCSS</a>, последно посетен на 2023-04-15</p>
+                    <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/</a>,
+                    последно посетен на 2023-04-15</p></p>
+
+                    <p id="link6">[6] Как да настроим PostCSS: 
+                        <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                        последно посетен на 2023-04-15</p>
+                        <p id="link6.1">[6.1] Настройване на PostCSS с помощта на PostCSS CLI 
+                            <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                            последно посетен на 2023-04-15</p>
+                        <p id="link6.2">[6.2] Настройване на PostCSS чрез NPM скриптове във файла package.json
+                            <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                            последно посетен на 2023-04-15</p>
+                        <p id="link6.3">[6.3] Настройване на PostCSS, като настроите конфигурационен файл на PostCSS
+                            <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                            последно посетен на 2023-04-15</p>
+                        <p id="link6.4">[6.4] Настройване на PostCSS с помощта на Task Runners (или Module Bundlers)
+                            <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                            последно посетен на 2023-04-15</p>
+                        </p>
+
+                    <p id="link7">[7] PostCSS vs Sass: 
+                    <p><a href="https://jacekjeznach.com/what-is-postcss-and-should-i-use-it/" target="_blank">https://jacekjeznach.com/what-is-postcss-and-should-i-use-it/</a>, последно посетен на 2023-04-15</p></p>
+
+                    <p id="link8">[8] Защо да използваме PostCSS? 
+                        <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    </p>
+
+                    <p id="link9">[9] Как да напишем PostCSS Plugin? 
+                    <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    <p id="link9.1">[9.1] Преминаване през всеки селекторен блок
+                        <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    <p id="link9.2">[9.2] Преминаване през всяко свойство
+                        <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    <p id="link9.3">[9.3] Намиране на свойства на препълване
+                        <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    <p id="link9.4">[9.4] Предотвратяване на дублиращи се свойства
+                        <p><a href="https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin" target="_blank">https://dockyard.com/blog/2018/02/01/writing-your-first-postcss-plugin</a>, последно посетен на 2023-04-15</p>
+                    </p>
+
+                    <p id="link10">[10] Инсталиране на първия ви PostCSS плъгин: 
+                    <p><a href="https://www.sitepoint.com/an-introduction-to-postcss/" target="_blank">https://www.sitepoint.com/an-introduction-to-postcss/, </a>
+                        последно посетен на 2023-04-01</p></p>
+
+                    <p id="link11">[11] Заключение: 
+                    <p><a href="https://www.freecodecamp.org/news/what-is-postcss/" target="_blank">https://www.freecodecamp.org/news/what-is-postcss/, </a>
+                    последно посетен на 2023-04-15</p>
+                    </p>
+                </section>
+                <div class="clear-fix"></div>
+
+                <section id="figures"> 
+                    <header><h2>Списък с фигури</h2></header>
+                    <p id="link-fig">[1] Фигура 1.    
+                    <a href="https://www.toptal.com/front-end/postcss-sass-new-play-date" target="_blank">https://www.toptal.com/front-end/postcss-sass-new-play-date,</a>
+                    последно посетен на 2023-05-15
+                    </p>
+                </section>
+                <div class="clear-fix"></div>
+            </main>
+        </div>
+    </body>
+</html>
